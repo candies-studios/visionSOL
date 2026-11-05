@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* ---- visionSOL design tokens ---- */
+@theme {
+  /* Brand colours sampled from the visionSOL logo */
+  --color-brand: #D6202A;       /* logo red – on light backgrounds, buttons */
+  --color-brand-deep: #B0161F;  /* hover */
+  --color-brand-hi: #FF5A61;    /* red for small text on dark backgrounds */
+  --color-ink: #0E1116;         /* darkest sections */
+  --color-coal: #1A1D24;        /* dark surfaces + main text colour */
+  --color-coal-2: #252932;
+  --color-paper: #F6F5F3;       /* warm off-white sections */
+  --color-line: #E4E1DC;
+  --color-slate: #555A65;       /* body text on light */
+  --color-haze: #A7ACB6;        /* body text on dark */
+
+  --font-sans: "Plus Jakarta Sans", "Manrope", "Inter", system-ui, sans-serif;
+
+  --animate-drift: drift 18s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-ticker: ticker 28s linear infinite;
+  --animate-glow: glow 6s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-18px, 14px); }
+}
+@keyframes glow {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  color: var(--color-coal);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--color-brand); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em]; }
+  .eyebrow::before { content: ""; @apply inline-block h-2 w-2 bg-brand; }
+  .display { @apply font-extrabold tracking-[-0.035em] leading-[1.02]; text-wrap: balance; }
+}
