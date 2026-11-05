@@ -7,6 +7,13 @@ const Router = import.meta.env.VITE_ARTIFACT ? MemoryRouter : BrowserRouter
 import App from './App.jsx'
 import './index.css'
 
+// The app loaded, so clear the one-time reload guard set in index.html.
+try {
+  sessionStorage.removeItem('vs-reloaded')
+} catch {
+  /* storage unavailable */
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router basename={import.meta.env.VITE_ARTIFACT ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '')}>

@@ -17,6 +17,21 @@
     <meta property="og:image" content="%BASE_URL%og-image.svg" />
     <meta name="twitter:card" content="summary_large_image" />
 
+    <!-- If the browser shows a cached page whose script files were replaced by a newer
+         deploy, the script fails to load and the page is blank. Reload once to fetch the
+         current version. -->
+    <script>
+      window.addEventListener('error', function (e) {
+        var t = e.target
+        if (!t || t.tagName !== 'SCRIPT' || !/\/assets\//.test(t.src || '')) return
+        try {
+          if (sessionStorage.getItem('vs-reloaded')) return
+          sessionStorage.setItem('vs-reloaded', '1')
+        } catch (_) {}
+        location.reload()
+      }, true)
+    </script>
+    <noscript>Please enable JavaScript to view the visionSOL website.</noscript>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
