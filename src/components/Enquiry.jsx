@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { Send, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react'
-import { site, whatsappLink } from '../config/site.js'
+import { site, whatsappLink, postForm } from '../config/site.js'
 
 export const serviceOptions = ['Design', 'Content', 'Digital Marketing', 'Events', 'Multiple Services', 'Other']
 const budgetOptions = ['Under ₹50,000', '₹50,000 – ₹2,00,000', '₹2,00,000 – ₹5,00,000', '₹5,00,000 – ₹10,00,000', 'Above ₹10,00,000', 'Not sure yet']
@@ -68,12 +68,20 @@ export function ContactForm({ preset = '', compact = false, idPrefix = '' }) {
     if (!site.formEndpoint) return setStatus('offline')
     setStatus('sending')
     try {
-      const res = await fetch(site.formEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ ...values, source: 'visionSOL website' }),
-      })
-      if (!res.ok) throw new Error(String(res.status))
+      await postForm(
+        site.formEndpoint,
+        {
+          'Full name': values.name,
+          Company: values.company || '-',
+          email: values.email,
+          Phone: values.phone,
+          Service: values.service,
+          Budget: values.budget || '-',
+          Message: values.message,
+          _replyto: values.email,
+        },
+        `New enquiry: ${values.service} – ${values.name}`,
+      )
       setStatus('sent')
       setValues(empty)
     } catch {
@@ -151,7 +159,7 @@ export function ContactForm({ preset = '', compact = false, idPrefix = '' }) {
         {status === 'error' && (
           <p role="alert" className="mb-5 flex items-start gap-2 border-l-4 border-brand bg-paper p-5 text-sm font-semibold text-brand-deep">
             <AlertCircle size={18} className="shrink-0" aria-hidden="true" />
-            Your message was not sent because of a connection problem. Please try again{site.email ? ` or email ${site.email}` : ''}.
+            Your message could not be sent just now. Please try again{site.email ? ` or email ${site.email}` : ''}.
           </p>
         )}
         <button

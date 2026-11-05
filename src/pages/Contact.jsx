@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin, MessageCircle, ArrowUpRight } from 'lucide-react'
 import { usePageMeta, PageHero, Reveal } from '../components/ui.jsx'
 import { ContactLine } from '../components/Footer.jsx'
 import { ContactForm } from '../components/Enquiry.jsx'
-import { site, activeSocials, whatsappLink } from '../config/site.js'
+import { site, activeSocials, whatsappLink, telHref } from '../config/site.js'
 
 export default function Contact() {
   usePageMeta('Contact Us', "Tell visionSOL about your next project: design, content, digital marketing or events. Let's talk about your next big idea.")
@@ -31,8 +31,12 @@ export default function Contact() {
               <h2 className="text-2xl font-extrabold tracking-tight text-white">Reach us directly</h2>
               <ul className="mt-8 space-y-5">
                 <ContactLine dark icon={Mail} value={site.email} href={`mailto:${site.email}`} placeholder="[Email address]" />
-                <ContactLine dark icon={Phone} value={site.phone} href={`tel:${site.phone.replace(/[^+\d]/g, '')}`} placeholder="[Phone number]" />
-                <ContactLine dark icon={MapPin} value={site.location} placeholder="[Office location]" />
+                {site.phones.length ? (
+                  site.phones.map((n) => <ContactLine dark key={n} icon={Phone} value={n} href={telHref(n)} />)
+                ) : (
+                  <ContactLine dark icon={Phone} placeholder="[Phone number]" />
+                )}
+                <ContactLine dark icon={MapPin} value={site.location} href={site.mapUrl} external placeholder="[Office location]" />
               </ul>
 
               {wa ? (

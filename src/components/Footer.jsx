@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, ArrowUpRight, ArrowRight } from 'lucide-react'
 import Logo from './Logo.jsx'
-import { site, activeSocials } from '../config/site.js'
+import { site, activeSocials, postForm, telHref } from '../config/site.js'
 import { services } from '../data/services.js'
 
 const quick = [
@@ -14,12 +14,18 @@ const quick = [
   { to: '/contact', label: 'Contact' },
 ]
 
-export function ContactLine({ icon: Icon, value, href, placeholder, dark = false }) {
+export function ContactLine({ icon: Icon, value, href, placeholder, dark = false, external = false }) {
   return (
     <li className="flex items-start gap-3">
       <Icon size={18} className={`mt-0.5 shrink-0 ${dark ? 'text-brand-hi' : 'text-brand'}`} aria-hidden="true" />
       {value && href ? (
-        <a href={href} className="break-all transition hover:text-brand">{value}</a>
+        <a
+          href={href}
+          {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          className={`transition ${dark ? 'hover:text-brand-hi' : 'hover:text-brand'} ${value.includes('@') ? 'break-all' : ''}`}
+        >
+          {value}
+        </a>
       ) : value ? (
         <span>{value}</span>
       ) : (
@@ -36,13 +42,13 @@ function Newsletter() {
     e.preventDefault()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) return setMsg({ ok: false, text: 'Please enter a valid email address.' })
     if (!site.newsletterEndpoint) return setMsg({ ok: false, text: "Newsletter sign-up isn't connected yet, so you have not been subscribed." })
+    setMsg({ ok: true, text: 'Subscribing…' })
     try {
-      const res = await fetch(site.newsletterEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
-      if (!res.ok) throw new Error()
+      await postForm(site.newsletterEndpoint, { email, form: 'Newsletter sign-up' }, 'New newsletter subscriber – visionSOL website')
       setMsg({ ok: true, text: "You're subscribed. Look out for our next note." })
       setEmail('')
     } catch {
-      setMsg({ ok: false, text: 'Subscription failed because of a connection problem. Please try again.' })
+      setMsg({ ok: false, text: "We couldn't complete your sign-up just now. Please try again in a moment." })
     }
   }
   return (
@@ -113,8 +119,12 @@ export default function Footer() {
           <h2 className="text-xs font-bold uppercase tracking-[0.2em]">Get in touch</h2>
           <ul className="mt-6 space-y-4 text-slate">
             <ContactLine icon={Mail} value={site.email} href={`mailto:${site.email}`} placeholder="[Email address]" />
-            <ContactLine icon={Phone} value={site.phone} href={`tel:${site.phone.replace(/[^+\d]/g, '')}`} placeholder="[Phone number]" />
-            <ContactLine icon={MapPin} value={site.location} placeholder="[Office location]" />
+            {site.phones.length ? (
+              site.phones.map((n) => <ContactLine key={n} icon={Phone} value={n} href={telHref(n)} />)
+            ) : (
+              <ContactLine icon={Phone} placeholder="[Phone number]" />
+            )}
+            <ContactLine icon={MapPin} value={site.location} href={site.mapUrl} external placeholder="[Office location]" />
           </ul>
           {socials.length > 0 && (
             <ul className="mt-8 flex flex-wrap gap-2">

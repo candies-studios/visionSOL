@@ -26,9 +26,12 @@ export const site = {
   logoAlt: 'visionSOL',
 
   // ---- CONTACT ----------------------------------------------
-  email: '',     // e.g. 'hello@visionsol.in'
-  phone: '',     // display format, e.g. '+91 98xxx xxxxx'
-  location: '',  // e.g. 'Mumbai, Maharashtra, India'
+  // (from seerweb.in/contact-us)
+  email: 'sales@visionsol.in',
+  // Shown in this order. The first is the main number.
+  phones: ['+91 22 6246 6246', '+91 99992 66246', '+91 93200 80409'],
+  location: 'Office No. 1902, G Square Business Park, Sector 30A, Vashi, Navi Mumbai, Maharashtra 400703',
+  mapUrl: 'https://www.google.com/maps/search/?api=1&query=G+Square+Business+Park+Sector+30A+Vashi+Navi+Mumbai+400703',
 
   // WhatsApp number in international format, digits only (no +, spaces or dashes)
   // e.g. '919800000000'. When empty, WhatsApp buttons are hidden.
@@ -37,23 +40,48 @@ export const site = {
 
   // ---- SOCIAL LINKS (leave '' to hide) -----------------------
   socials: [
-    { label: 'Instagram', url: '' },
-    { label: 'LinkedIn', url: '' },
-    { label: 'Facebook', url: '' },
-    { label: 'YouTube', url: '' },
-    { label: 'X', url: '' },
+    // Seerweb / Vision Solutions accounts listed on seerweb.in.
+    // Replace with visionSOL's own profiles when they exist.
+    { label: 'Instagram', url: 'https://www.instagram.com/seerweb_' },
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/company/vision-solutions-tally' },
+    { label: 'Facebook', url: 'https://www.facebook.com/SeerwebERPSolutions/' },
+    { label: 'YouTube', url: 'https://www.youtube.com/channel/UCc87Rt4RHD4As-WxWF66RDw' },
+    { label: 'X', url: 'https://twitter.com/VisionSolTally' },
   ],
 
-  // ---- CONTACT FORM -----------------------------------------
-  // POST endpoint that accepts JSON (Formspree, Web3Forms, Getform,
-  // your own API, etc). When empty the form validates but tells the
-  // visitor it is not connected yet and offers email / WhatsApp instead.
-  formEndpoint: '', // e.g. 'https://formspree.io/f/xxxxxxx'
-
-  // Footer newsletter sign-up: POST endpoint accepting { email } as JSON
-  // (Mailchimp/Brevo form API, Formspree, your own API). Empty = not connected.
-  newsletterEndpoint: '',
+  // ---- FORMS ------------------------------------------------
+  // Both forms send their details by email through FormSubmit (free, no account):
+  // https://formsubmit.co. The FIRST submission sends an "Activate Form" email to
+  // the address below. Click that link once; after that every enquiry and
+  // newsletter sign-up arrives in this inbox.
+  // To use Formspree, Web3Forms or your own API instead, paste its JSON POST URL.
+  formEndpoint: 'https://formsubmit.co/ajax/sales@visionsol.in',
+  newsletterEndpoint: 'https://formsubmit.co/ajax/sales@visionsol.in',
 }
+
+/**
+ * Sends a form as JSON and resolves only when the service confirms delivery.
+ * Understands FormSubmit's reply ({ success: "true" | "false", message }).
+ */
+export async function postForm(endpoint, data, subject) {
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ ...data, _subject: subject, _template: 'table', _captcha: 'false' }),
+  })
+  let body = null
+  try {
+    body = await res.json()
+  } catch {
+    /* some services reply without JSON */
+  }
+  if (!res.ok || (body && (body.success === false || body.success === 'false'))) {
+    throw new Error(body?.message || `Request failed (${res.status})`)
+  }
+  return body
+}
+
+export const telHref = (n) => `tel:${n.replace(/[^+\d]/g, '')}`
 
 export const activeSocials = () => site.socials.filter((s) => s.url)
 
