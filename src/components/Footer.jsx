@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin, ArrowUpRight, ArrowRight } from 'lucide-react'
+import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react'
 import Logo from './Logo.jsx'
-import { site, activeSocials, postForm, telHref } from '../config/site.js'
+import { site, activeSocials, postForm, telHref, whatsappLink } from '../config/site.js'
+import SocialIcon from './SocialIcon.jsx'
 import { services } from '../data/services.js'
 
 const quick = [
@@ -47,8 +48,13 @@ function Newsletter() {
       await postForm(site.newsletterEndpoint, { email, form: 'Newsletter sign-up' }, 'New newsletter subscriber – visionSOL website')
       setMsg({ ok: true, text: "You're subscribed. Look out for our next note." })
       setEmail('')
-    } catch {
-      setMsg({ ok: false, text: "We couldn't complete your sign-up just now. Please try again in a moment." })
+    } catch (err) {
+      setMsg({
+        ok: false,
+        text: err.needsActivation
+          ? "Sign-ups open once the site owner confirms the activation email. You haven't been subscribed yet; please try again later."
+          : "We couldn't complete your sign-up just now. Please try again in a moment.",
+      })
     }
   }
   return (
@@ -74,7 +80,8 @@ function Newsletter() {
 }
 
 export default function Footer() {
-  const socials = activeSocials()
+  const wa = whatsappLink()
+  const links = [...(wa ? [{ label: 'WhatsApp', icon: 'whatsapp', url: wa }] : []), ...activeSocials()]
   const year = new Date().getFullYear()
 
   return (
@@ -126,26 +133,34 @@ export default function Footer() {
             )}
             <ContactLine icon={MapPin} value={site.location} href={site.mapUrl} external placeholder="[Office location]" />
           </ul>
-          {socials.length > 0 && (
-            <ul className="mt-8 flex flex-wrap gap-2">
-              {socials.map((s) => (
-                <li key={s.label}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full border border-coal/20 px-4 py-2 text-sm font-semibold transition hover:border-brand hover:text-brand">
-                    {s.label} <ArrowUpRight size={14} aria-hidden="true" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
       </div>
 
+      {links.length > 0 && (
+        <div className="container-x flex flex-col gap-4 border-t border-line py-8 sm:flex-row sm:items-center sm:gap-8">
+          <p className="text-xs font-bold uppercase tracking-[0.2em]">Follow &amp; chat with us</p>
+          <ul className="flex flex-wrap gap-3">
+            {links.map((s) => (
+              <li key={s.label}>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  title={s.label}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-coal/15 bg-white text-coal transition hover:-translate-y-0.5 hover:border-brand hover:bg-brand hover:text-white"
+                >
+                  <SocialIcon name={s.icon} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="border-t border-line">
-        <div className="container-x flex flex-col gap-3 py-6 text-sm text-slate md:flex-row md:items-center md:justify-between">
+        <div className="container-x py-6 text-sm text-slate">
           <p>© {year} visionSOL. All rights reserved.</p>
-          <p>
-            visionSOL – A Sister Company of <span className="font-semibold text-coal">{site.parent}</span>.
-          </p>
         </div>
       </div>
     </footer>

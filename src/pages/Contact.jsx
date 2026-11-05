@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, MessageCircle, ArrowUpRight } from 'lucide-react'
 import { usePageMeta, PageHero, Reveal } from '../components/ui.jsx'
 import { ContactLine } from '../components/Footer.jsx'
 import { ContactForm } from '../components/Enquiry.jsx'
+import SocialIcon from '../components/SocialIcon.jsx'
 import { site, activeSocials, whatsappLink, telHref } from '../config/site.js'
 
 export default function Contact() {
@@ -41,7 +42,7 @@ export default function Contact() {
 
               {wa ? (
                 <a href={wa} target="_blank" rel="noopener noreferrer" className="mt-10 flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 font-bold text-ink transition hover:brightness-105">
-                  <MessageCircle size={20} aria-hidden="true" /> Enquire on WhatsApp
+                  <SocialIcon name="whatsapp" size={20} /> Enquire on WhatsApp
                 </a>
               ) : (
                 <p className="mt-10 flex items-center gap-2 rounded-full border border-dashed border-white/25 px-6 py-3.5 text-sm text-haze">

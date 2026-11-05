@@ -27,7 +27,7 @@ export const site = {
 
   // ---- CONTACT ----------------------------------------------
   // (from seerweb.in/contact-us)
-  email: 'sales@visionsol.in',
+  email: 'vikram@visionsol.site',
   // Shown in this order. The first is the main number.
   phones: ['+91 22 6246 6246', '+91 99992 66246', '+91 93200 80409'],
   location: 'Office No. 1902, G Square Business Park, Sector 30A, Vashi, Navi Mumbai, Maharashtra 400703',
@@ -35,18 +35,19 @@ export const site = {
 
   // WhatsApp number in international format, digits only (no +, spaces or dashes)
   // e.g. '919800000000'. When empty, WhatsApp buttons are hidden.
-  whatsappNumber: '',
+  whatsappNumber: '919320080409',
   whatsappMessage: "Hi visionSOL, I'd like to talk about a project.",
 
   // ---- SOCIAL LINKS (leave '' to hide) -----------------------
   socials: [
     // Seerweb / Vision Solutions accounts listed on seerweb.in.
     // Replace with visionSOL's own profiles when they exist.
-    { label: 'Instagram', url: 'https://www.instagram.com/seerweb_' },
-    { label: 'LinkedIn', url: 'https://www.linkedin.com/company/vision-solutions-tally' },
-    { label: 'Facebook', url: 'https://www.facebook.com/SeerwebERPSolutions/' },
-    { label: 'YouTube', url: 'https://www.youtube.com/channel/UCc87Rt4RHD4As-WxWF66RDw' },
-    { label: 'X', url: 'https://twitter.com/VisionSolTally' },
+    // `icon` names match src/components/SocialIcon.jsx
+    { label: 'Instagram', icon: 'instagram', url: 'https://www.instagram.com/seerweb_' },
+    { label: 'LinkedIn', icon: 'linkedin', url: 'https://www.linkedin.com/company/vision-solutions-tally' },
+    { label: 'Facebook', icon: 'facebook', url: 'https://www.facebook.com/SeerwebERPSolutions/' },
+    { label: 'YouTube', icon: 'youtube', url: 'https://www.youtube.com/channel/UCc87Rt4RHD4As-WxWF66RDw' },
+    { label: 'X', icon: 'x', url: 'https://twitter.com/VisionSolTally' },
   ],
 
   // ---- FORMS ------------------------------------------------
@@ -55,8 +56,8 @@ export const site = {
   // the address below. Click that link once; after that every enquiry and
   // newsletter sign-up arrives in this inbox.
   // To use Formspree, Web3Forms or your own API instead, paste its JSON POST URL.
-  formEndpoint: 'https://formsubmit.co/ajax/sales@visionsol.in',
-  newsletterEndpoint: 'https://formsubmit.co/ajax/sales@visionsol.in',
+  formEndpoint: 'https://formsubmit.co/ajax/vikram@visionsol.site',
+  newsletterEndpoint: 'https://formsubmit.co/ajax/vikram@visionsol.site',
 }
 
 /**
@@ -76,7 +77,9 @@ export async function postForm(endpoint, data, subject) {
     /* some services reply without JSON */
   }
   if (!res.ok || (body && (body.success === false || body.success === 'false'))) {
-    throw new Error(body?.message || `Request failed (${res.status})`)
+    const err = new Error(body?.message || `Request failed (${res.status})`)
+    err.needsActivation = /activat/i.test(body?.message || '')
+    throw err
   }
   return body
 }

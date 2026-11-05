@@ -84,8 +84,8 @@ export function ContactForm({ preset = '', compact = false, idPrefix = '' }) {
       )
       setStatus('sent')
       setValues(empty)
-    } catch {
-      setStatus('error')
+    } catch (err) {
+      setStatus(err.needsActivation ? 'inactive' : 'error')
     }
   }
 
@@ -155,6 +155,13 @@ export function ContactForm({ preset = '', compact = false, idPrefix = '' }) {
               </div>
             )}
           </div>
+        )}
+        {status === 'inactive' && (
+          <p role="alert" className="mb-5 flex items-start gap-2 border-l-4 border-brand bg-paper p-5 text-sm font-semibold text-brand-deep">
+            <AlertCircle size={18} className="shrink-0" aria-hidden="true" />
+            Online enquiries open once the site owner confirms the activation email, so this message has not been sent.
+            {site.email ? ` Please email ${site.email} directly.` : ''}
+          </p>
         )}
         {status === 'error' && (
           <p role="alert" className="mb-5 flex items-start gap-2 border-l-4 border-brand bg-paper p-5 text-sm font-semibold text-brand-deep">

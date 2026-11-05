@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { MessageCircle } from 'lucide-react'
 import Navbar from './Navbar.jsx'
 import Footer from './Footer.jsx'
 import { whatsappLink } from '../config/site.js'
 import { EnquiryProvider } from './Enquiry.jsx'
+import SocialIcon from './SocialIcon.jsx'
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -32,7 +32,7 @@ function WhatsAppFloat() {
       className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition hover:scale-105"
       aria-label="Chat with visionSOL on WhatsApp"
     >
-      <MessageCircle size={26} aria-hidden="true" />
+      <SocialIcon name="whatsapp" size={28} />
     </a>
   )
 }
