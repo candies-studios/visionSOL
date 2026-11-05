@@ -1,4 +1,4 @@
-import { site } from '../config/site.js'
+import { site, asset } from '../config/site.js'
 
 /**
  * Brand logo.
@@ -10,7 +10,7 @@ export default function Logo({ onDark = true, className = 'h-9' }) {
   const src = onDark ? site.logoLight || site.logo : site.logo || site.logoLight
 
   if (src) {
-    return <img src={src} alt={site.logoAlt} className={`${className} w-auto object-contain`} />
+    return <img src={asset(src)} alt={site.logoAlt} className={`${className} w-auto object-contain`} />
   }
 
   return (

@@ -9,7 +9,7 @@ import './index.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Router>
+    <Router basename={import.meta.env.VITE_ARTIFACT ? undefined : import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <App />
     </Router>
   </StrictMode>,

@@ -1,3 +1,4 @@
+import { asset } from '../config/site.js'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
 import { usePageMeta, Reveal, Button } from '../components/ui.jsx'
@@ -71,7 +72,7 @@ export default function ProjectDetail() {
             {project.gallery?.length > 0 && (
               <div className="mt-12 grid gap-6 sm:grid-cols-2">
                 {project.gallery.map((src) => (
-                  <img key={src} src={src} alt="" loading="lazy" className="w-full object-cover" />
+                  <img key={src} src={asset(src)} alt="" loading="lazy" className="w-full object-cover" />
                 ))}
               </div>
             )}

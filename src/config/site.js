@@ -8,6 +8,9 @@
  * ============================================================
  */
 
+/** Turns a path inside /public into a URL that works wherever the site is hosted. */
+export const asset = (path) => (path && path.startsWith('/') ? import.meta.env.BASE_URL + path.slice(1) : path)
+
 export const site = {
   name: 'visionSOL',
   parent: 'Seerweb ERP Solutions Pvt Ltd',

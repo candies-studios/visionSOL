@@ -1,3 +1,4 @@
+import { asset } from '../config/site.js'
 
 const GOLD = '#D6202A'
 const NAVY = '#171A21'
@@ -278,7 +279,7 @@ const palettes = [
 
 export function ProjectCover({ project, index = 0, className = '' }) {
   if (project.image) {
-    return <img src={project.image} alt={project.title} loading="lazy" className={`h-full w-full object-cover ${className}`} />
+    return <img src={asset(project.image)} alt={project.title} loading="lazy" className={`h-full w-full object-cover ${className}`} />
   }
   const p = palettes[index % palettes.length]
   const initials = project.title.split(' ').map((w) => w[0]).slice(0, 2).join('')

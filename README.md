@@ -61,7 +61,7 @@ Everything is in **`src/config/site.js`**:
 | `location` | `'Mumbai, Maharashtra'` |
 | `whatsappNumber` | `'9198xxxxxxxx'` (digits only, with country code) |
 | `socials[].url` | `'https://instagram.com/visionsol'` |
-| `logo` / `logoLight` | `'/brand/visionsol-logo.svg'` |
+| `logo` / `logoLight` | `'/brand/visionsol-logo.svg'` (paths in `/public`; the site adds the right prefix) |
 | `formEndpoint` | `'https://formspree.io/f/xxxx'` (contact page + Let's Talk pop-up) |
 | `newsletterEndpoint` | footer newsletter sign-up |
 
@@ -103,12 +103,26 @@ The homepage "Selected projects" shows the first five in the list.
 
 ## 6. Deploy
 
+The browser can't run the files in `src/` directly: the site must be **built** first (`npm run build`),
+and the built files in `dist/` are what gets published. Uploading the source alone gives a blank page.
+
+### GitHub Pages (automatic)
+1. Push or upload the whole project to the repo, including `.github/workflows/deploy.yml`.
+2. Repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. Every push to `main` now builds and publishes the site to `https://<user>.github.io/<repo>/`.
+   Progress and errors show in the repo's **Actions** tab.
+
+The workflow sets `BASE_PATH=/<repo>/` so links, images and page routes work inside the repo folder.
+If you later connect a custom domain (e.g. www.visionsol.in), change `BASE_PATH` in the workflow to `/`.
+
+### Other hosts
 - **Vercel:** import the repo → framework "Vite" → deploy. `vercel.json` handles page routes.
 - **Netlify:** build command `npm run build`, publish directory `dist`. `public/_redirects` handles routes.
-- **Any static host / cPanel:** run `npm run build` and upload the contents of `dist/`. Configure the
+- **cPanel / any static host:** run `npm run build` and upload the contents of `dist/`. Configure the
   server to serve `index.html` for unknown paths (e.g. an `.htaccess` rewrite) so deep links work.
+  If the site lives in a sub-folder, build with `BASE_PATH=/folder-name/ npm run build`.
 
-After going live, set `url` in `site.js` and update `og:image` in `index.html` to a PNG.
+After going live, set `url` in `site.js`.
 
 ## 7. Quality checks done
 
